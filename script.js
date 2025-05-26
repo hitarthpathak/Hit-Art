@@ -14,7 +14,7 @@ function create_data(data, index) {
     let post = document.createElement('p');
     post.id = "data";
     post.innerHTML = `
-        <span id="#span">${data}</span>
+        <span id="#span" style="white-space: pre-wrap;">${data}</span>
         <button id="delete" onclick="delete_data(${index})">Delete</button>
     `;
     posts.appendChild(post);
