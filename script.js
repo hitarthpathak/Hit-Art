@@ -1,43 +1,58 @@
-let input_data = document.getElementById("input-data");
-let add_data_btn = document.getElementById("add-data");
-let posts = document.getElementById("posts");
+let new_post = document.getElementById("new-post");
+let posts_list = document.getElementById("posts-list");
 
-function load_data() {
-    let data_collection = JSON.parse(localStorage.getItem('data')) || [];
-    posts.innerHTML = '';
-    data_collection.forEach((data, index) => {
-        create_data(data, index);
+// --------------------------------------------------------------------------------------------------
+
+let blog_posts = JSON.parse(localStorage.getItem("blog-posts")) || [];
+
+// --------------------------------------------------------------------------------------------------
+
+window.addEventListener("load", () => {
+    if (blog_posts.length == 0) {
+        posts_list.textContent = "No Posts!";
+    }
+    else {
+        load_posts();
+    }
+});
+
+// --------------------------------------------------------------------------------------------------
+
+function load_posts() {
+    posts_list.innerHTML = "";
+    if (blog_posts.length == 0) {
+        posts_list.textContent = "No Posts!";
+        return;
+    }
+    blog_posts.forEach((post, index) => {
+        let p = document.createElement('p');
+        p.className = "post";
+        p.innerHTML = `
+            <span class="span">${post}</span>
+            <button class="delete" onclick="delete_post(${index})">Delete</button>
+        `;
+        posts_list.appendChild(p);
     });
 };
 
-function create_data(data, index) {
-    let post = document.createElement('p');
-    post.id = "data";
-    post.innerHTML = `
-        <span id="#span" style="white-space: pre-wrap;">${data}</span>
-        <button id="delete" onclick="delete_data(${index})">Delete</button>
-    `;
-    posts.appendChild(post);
-};
+// --------------------------------------------------------------------------------------------------
 
-function add_data() {
-    const data = input_data.value.trim();
-    if (data) {
-        let data_collection = JSON.parse(localStorage.getItem('data')) || [];
-        data_collection.push(data);
-        localStorage.setItem('data', JSON.stringify(data_collection));
-        create_data(data, data_collection.length - 1);
-        input_data.value = '';
+function add_post() {
+    if (new_post.value != "") {
+        blog_posts.push(new_post.value);
+        localStorage.setItem("blog-posts", JSON.stringify(blog_posts));
+        new_post.value = "";
+        load_posts();
+    }
+    else {
+        alert("Please Enter A Post!");
     }
 };
 
-function delete_data(index) {
-    let data_collection = JSON.parse(localStorage.getItem('data')) || [];
-    data_collection.splice(index, 1);
-    localStorage.setItem('data', JSON.stringify(data_collection));
-    load_data();
+// --------------------------------------------------------------------------------------------------
+
+function delete_post(index) {
+    blog_posts.splice(index, 1);
+    localStorage.setItem("blog-posts", JSON.stringify(blog_posts));
+    load_posts();
 };
-
-add_data_btn.addEventListener('click', add_data);
-
-window.onload = load_data;
