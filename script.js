@@ -1,4 +1,5 @@
 let new_post = document.getElementById("new-post");
+let add_post_button = document.getElementById("add-post-button");
 let posts_list = document.getElementById("posts-list");
 
 // --------------------------------------------------------------------------------------------------
@@ -42,6 +43,7 @@ function load_posts() {
 
 function add_post() {
     if (new_post.value != "") {
+        add_post_button.textContent = "Save";
         blog_posts.push(new_post.value);
         localStorage.setItem("blog-posts", JSON.stringify(blog_posts));
         new_post.value = "";
@@ -56,6 +58,7 @@ function add_post() {
 
 function edit_post(index) {
     new_post.value = blog_posts[index];
+    add_post_button.textContent = "Update & Save";
     blog_posts.splice(index, 1);
     localStorage.setItem("blog-posts", JSON.stringify(blog_posts));
     load_posts();
